@@ -135,6 +135,13 @@ void matrix_init_user(void) {
     #endif
 }
 
+void encoder_update_user(uint8_t index, bool clockwise) { 
+  if (index == 0) { 
+    if (clockwise) { tap_code(KC_VOLU); } 
+    else { tap_code(KC_VOLD); } 
+  } 
+}
+
 //SSD1306 OLED update loop, make sure to enable OLED_DRIVER_ENABLE=yes in rules.mk
 #ifdef OLED_DRIVER_ENABLE
 
