@@ -88,12 +88,11 @@ void matrix_init_user(void) {
 
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (clockwise) {
-        tap_code16(C(KC_TAB));
+        tap_code16(C(KC_RGHT));
     } else {
-        tap_code16(S(C(KC_TAB)));
+        tap_code16(C(KC_LEFT));
     }
 }
-
 // SSD1306 OLED update loop, make sure to enable OLED_DRIVER_ENABLE=yes in rules.mk
 #ifdef OLED_DRIVER_ENABLE
 
