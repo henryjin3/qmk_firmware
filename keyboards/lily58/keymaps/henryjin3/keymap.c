@@ -25,6 +25,9 @@ enum custom_keycodes {
     LOWER,
     RAISE,
     ADJUST,
+    QUESTIONS,
+    ROFL,
+    EMDASH
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -44,24 +47,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                   `----------------------------'           '------''--------------------'
      */
 
+    //Normal
     [0] = LAYOUT(KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_EQL, 
     KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_MINS, 
     KC_LCTL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, 
     KC_LSPO, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_MPLY, KC_GRV, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSPC,
      KC_LALT, KC_LGUI, LT(1,KC_LBRC), KC_SPC, KC_ENT, LT(2,KC_RBRC), KC_BSPC, KC_DEL),
 
-	[1] = LAYOUT(KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
-    KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+    //Lower
+	[1] = LAYOUT(KC_TRNS, QUESTIONS, ROFL, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+    KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, EMDASH, 
     KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, LCTL(KC_LEFT), KC_TRNS, KC_TRNS, LCTL(KC_RGHT), KC_PIPE, KC_TRNS, 
     KC_VOLD, KC_VOLU, KC_MPRV, KC_MPLY, KC_MNXT, KC_PSCR, KC_TRNS, KC_TRNS, LCTL(KC_HOME), KC_TRNS, KC_TRNS, LCTL(KC_END), KC_BSLS, KC_TRNS, 
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
+    //Raise
 	[2] = LAYOUT(KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_BTN1, KC_BTN2, 
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, KC_PIPE, KC_TRNS, 
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TG(3), KC_HOME, KC_PGDN, KC_PGUP, KC_END, KC_BSLS, KC_TRNS, 
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_WBAK, KC_WFWD),
 
+    //Numpad
 	[3] = LAYOUT(KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_PSLS, KC_PAST, KC_NO, KC_NO, 
     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_P7, KC_P8, KC_P9, KC_PMNS, KC_NO, 
     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_P4, KC_P5, KC_P6, KC_PPLS, KC_NO, 
@@ -136,6 +143,12 @@ void oled_task_user(void) {
 }
 #endif  // OLED_DRIVER_ENABLE
 
+
+const qk_ucis_symbol_t ucis_symbol_table[] = UCIS_TABLE(
+    // UCIS_SYM("poop", 0x1F4A9),                // 💩
+    UCIS_SYM("rofl", 0x1F923)                // 🤣
+);
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
 #ifdef OLED_DRIVER_ENABLE
@@ -145,6 +158,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     switch (keycode) {
+        case QUESTIONS:
+            if (record->event.pressed) {
+                SEND_STRING("Feel free to let me know if you have any questions!");
+            }
+            break;
+        case ROFL:
+            if (record->event.pressed) {
+                send_unicode_string("🤣");
+            }
+            break;
+        case EMDASH:
+            if (record->event.pressed) {
+                send_unicode_string("—");
+            }
+            break;
+
+        //not sure what these are for
         case QWERTY:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_QWERTY);
